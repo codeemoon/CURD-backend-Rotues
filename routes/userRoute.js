@@ -6,9 +6,9 @@ const User = require('../model/userSchema')
 
 const route = express.Router()
 
-route.post("/user", createuser )
+route.post("/signup", createuser )
 
-route.post("/user/login",login )
+route.post("/signin",login )
 
 route.get("/user", checkUser)
 

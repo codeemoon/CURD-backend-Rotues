@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const {generateJWT} = require("../utills/generateToken");
 
 async function createuser(req, res) {
-   let { name, email, pass } = req.body;
+   let { name, email, password } = req.body;
 
   try {
     if (!name) {
@@ -18,7 +18,7 @@ async function createuser(req, res) {
         message: "Please enter email",
       });
     }
-    if (!pass) {
+    if (!password) {
       return res.status(400).json({
         success: false,
         message: "Please enter password",
@@ -34,12 +34,12 @@ async function createuser(req, res) {
       });
     }
 
-    const hashedPassword = await bcrypt.hash(pass , 10)
+    const hashedPassword = await bcrypt.hash(password , 10)
     // console.log(passwordHashing);
 
     const newUser = await User.create({ name, email, password: hashedPassword  })
 
-    // let Token = await generateJWT({email : newUser.name , id : newUser._id})
+    let Token = await generateJWT({email : newUser.name , id : newUser._id})
 
 
     return res.status(200).json({
@@ -48,9 +48,8 @@ async function createuser(req, res) {
       user : {
         name : newUser.name,
         email :  newUser.email,
-        blog : newUser.Blogs,
-        // Token,
-      }
+      },
+      Token
       
     });
   } catch (error) {

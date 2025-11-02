@@ -2,7 +2,6 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const dbConnect = require("./config/dbConnect");
-const User = require("./model/userSchema");
 const userRoute = require("./routes/userRoute");
 const blogRoute = require("./routes/blogRoute");
 const  cloudniaryConfig  = require("./config/cloudnaryconfig");
