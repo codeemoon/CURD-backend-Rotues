@@ -14,12 +14,12 @@ route.post("/blog", verifyUser, upload.single("image") ,createBlog)
 
 route.get("/blog", getBlogs)
 
-route.get("/blog/:id",getBlog)
+route.get("/blog/:blogId",getBlog)
 
 route.patch("/blog/:id", verifyUser , updateBlog)
 
 route.delete("/blog/:id", verifyUser , deleteBlog)
-
+ 
 // for likes
 route.post('/blog/like/:id' , verifyUser , likeBlog)
  

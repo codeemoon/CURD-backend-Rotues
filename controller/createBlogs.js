@@ -4,6 +4,7 @@ const User = require("../model/userSchema");
 const deleteImage = require("../utills/deleteimage");
 const forImageUploadation = require("../utills/uploadimage");
 const fs = require('fs')
+const uniqueId = require('uniqid')
 
 
 async function createBlog(req, res) {
@@ -31,17 +32,19 @@ async function createBlog(req, res) {
     
     if(!findUser){
      return res.status(404).json({
-        success : fail,
+        success : false,
         message : "Inavild User",
       })
     }
-     
+       
 
     const {secure_url , public_id } = await forImageUploadation(image.path)
-    
+  
     fs.unlinkSync(image.path)
+    // const blogId = title.toLowerCase().replace(/ +/g , "-")
+    const blogId = title.toLowerCase().split(" ").join("-") + "-" + uniqueId()
 
-    let blogPosted = await Blog.create({ title, description, draft , creator , image : secure_url , imageId : public_id });
+    let blogPosted = await Blog.create({ title, description, draft , creator , image : secure_url , imageId : public_id , blogId});
 
      await User.findByIdAndUpdate(creator , {$push : {Blogs : blogPosted.
       _id}})
@@ -85,16 +88,18 @@ async function getBlogs(req, res) {
   }
 }
 async function getBlog( req , res) {
-  let { id } = req.params;
+  let { blogId } = req.params;
   try {
-    let blogById = await Blog.findById(id)
+    let blogById = await Blog.findOne({blogId})
     .populate({
       path : 'comments',
       populate :{
         path : "user",
         select : "name email"
       }
-      
+    }).populate({
+      path : 'creator',
+      select : 'name , email'
     })
     return res.status(200).json({
       success: true,
