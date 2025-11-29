@@ -10,4 +10,4 @@ async function deleteImage (imagepath){
     }
 }
 
-module.exports = deleteImage
+module.exports = deleteImage 
